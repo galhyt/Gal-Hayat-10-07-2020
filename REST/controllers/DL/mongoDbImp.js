@@ -97,14 +97,29 @@ class MongoDbImpl extends DbInterface {
         return ret
     }
 
-    async getTasks(ids /*ids array*/) {
+    async getTasks(id /*ids array*/) {
+        var tasks
+        var filter = {}
+        if (id != null) filter._id = ObjectID(id)
+
         try {
+            await new Promise((resolve, reject) => {
+                this.connect(async function(dbo) {
+                        dbo.collection("tasks").find(filter).toArray(function(err, res) {
+                            if (err)
+                                reject(err)
+                            else
+                                resolve(res)
+                        })
+                    })
+            }).then((res) => {tasks = res})
         }
         catch(e) {
-            return null
+            console.log(e.message)
+            return false
         }
 
-        return []
+        return tasks
     }
 
     // async authenticateUser(userName, password) {

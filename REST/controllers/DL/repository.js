@@ -22,8 +22,8 @@ class DbRepository {
         return await this.db.deleteTask(id)
     }
 
-    async getTasks(ids) {
-        var tasks = await this.db.getTasks(ids)
+    async getTasks(id) {
+        var tasks = await this.db.getTasks(id)
         return tasks
     }
 

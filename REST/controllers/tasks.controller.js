@@ -8,6 +8,7 @@ router.post('/createTask', createTask);
 router.post('/editTask', editTask);
 router.get('/deleteTask', deleteTask);
 router.get('/getAllTasks', getAllTasks);
+router.get('/getTask', getTask);
 
 module.exports = router;
 
@@ -35,5 +36,14 @@ function deleteTask(req, res, next) {
 }
 
 function getAllTasks(req, res, next) {
-    res.json({name: 'getAllTasks'})
+    TasksBL.getTasks()
+        .then(tasks => res.json(tasks))
+        .catch(next);
+}
+
+function getTask(req, res, next) {
+    const {id} = req.query
+    TasksBL.getTask(id)
+        .then(task => res.json(task))
+        .catch(next);
 }

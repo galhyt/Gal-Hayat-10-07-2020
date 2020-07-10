@@ -28,9 +28,13 @@ class TasksBL {
         }
     }
 
-    static async getTasks(ids) {
-        const tasks = await this.dbRep.getTasks(ids)
-        return tasks
+    static async getTasks() {
+        return await this.dbRep.getTasks()
+    }
+
+    static async getTask(id) {
+        const tasks = await this.dbRep.getTasks(id)
+        return tasks[0]
     }
 }
 
