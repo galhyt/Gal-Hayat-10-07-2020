@@ -4,6 +4,7 @@ require('custom-env').env(true)
 var MongoClient = require('mongodb').MongoClient;
 const DbInterface = require('./dbInterface')
 const entities = require('./entities');
+const { ObjectID } = require('mongodb');
 const {TaskEntity, UserEntity} = entities
 
 var dbConnection = "mongodb://"
@@ -47,23 +48,53 @@ class MongoDbImpl extends DbInterface {
     }
 
     async editTask(task /*TaskEntity*/) {
+        var ret = false
         try {
+            await new Promise((resolve, reject) => {
+                this.connect(async function(dbo) {
+                        dbo.collection("tasks").updateOne({'_id': ObjectID(task._id)},{$set: {
+                            title: task.title,
+                            clientName: task.clientName,
+                            clientPhone: task.clientPhone,
+                            clientEmail: task.clientEmail,
+                            timeStamp: task.timeStamp
+                        }}, (err, res) => {
+                            if (!err)
+                                resolve()
+                            else
+                                reject(err)
+                        })
+                    })
+            }).then(() => {ret = true})
         }
         catch(e) {
+            console.log(e.message)
             return false
         }
 
-        return true
+        return ret
     }
 
     async deleteTask(id) {
+        var ret = false
         try {
+            await new Promise((resolve, reject) => {
+                this.connect(async function(dbo) {
+                        dbo.collection("tasks").deleteOne({"_id": ObjectID(id)}, function(err, res) {
+                            if (err)
+                                reject(err)
+                            else
+                                resolve()
+                        })
+                    })
+            }).then(() => {ret = true})
         }
         catch(e) {
+            console.log(e.message)
             return false
         }
 
-        return true
+        return ret
     }
 
     async getTasks(ids /*ids array*/) {

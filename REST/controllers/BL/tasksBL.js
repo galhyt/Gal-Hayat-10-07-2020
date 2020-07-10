@@ -24,7 +24,7 @@ class TasksBL {
         const status = (await this.dbRep.deleteTask(id) ? 'OK' : 'Error')
         return {
             status: status,
-            text: (status == 'OK' ? `Task "${task.title}" was deleted succesfully!` : `Error deleting Task "${task.title}"!`)
+            text: (status == 'OK' ? `Task was deleted succesfully!` : `Error deleting Task!`)
         }
     }
 

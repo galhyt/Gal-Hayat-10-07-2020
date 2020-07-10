@@ -1,12 +1,15 @@
 class TaskEntity {
-    id;
+    _id;
     title;
+    clientName;
+    clientPhone;
+    clientEmail;
     userID;
     createDate;
     timeStamp;
 }
 class UserEntity {
-    id;
+    _id;
     privateName;
     familyName;
     birthDate;

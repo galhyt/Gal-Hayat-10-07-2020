@@ -20,11 +20,18 @@ function createTask(req, res, next) {
 }
 
 function editTask(req, res, next) {
-    res.json({name: 'editTask'})
+    const task = req.body
+    // const user = getUserFromToken(getTokenFromHeaders(req))
+    TasksBL.editTask(task)
+        .then(status => res.json(status))
+        .catch(next);
 }
 
 function deleteTask(req, res, next) {
-    res.json({name: 'deleteTask'})
+    const {id} = req.query
+    TasksBL.deleteTask(id)
+        .then(status => res.json(status))
+        .catch(next);
 }
 
 function getAllTasks(req, res, next) {
