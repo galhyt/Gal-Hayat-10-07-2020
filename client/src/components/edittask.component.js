@@ -44,7 +44,13 @@ class EditTask extends Component {
 
     async componentWillMount() {
         const {id,edit} = this.props.match.params
-        const task = await this.getTask(id)
+        var task = {title:'',
+            clientName: '',
+            clientPhone: '',
+            clientEmail: ''
+        }
+        if (id != '0')
+            task = await this.getTask(id)
         this.setState({task: task, edit: edit})
     }
 

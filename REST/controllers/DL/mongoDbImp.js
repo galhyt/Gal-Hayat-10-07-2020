@@ -26,7 +26,7 @@ class MongoDbImpl extends DbInterface {
     }
 
     async createTask(task /*TaskEntity*/) {
-        var ret = false
+        var ret = null
         try {
             await new Promise((resolve, rej) => {
                 this.connect(async function(dbo) {
@@ -34,14 +34,14 @@ class MongoDbImpl extends DbInterface {
                             if (err)
                                 rej(err)
                             else
-                                resolve()
+                                resolve(res.insertedId )
                         })
                     })
-            }).then(() => {ret = true})
+            }).then(insertedId => {ret = insertedId })
         }
         catch(e) {
             console.log(e.message)
-            return false
+            return null
         }
 
         return ret

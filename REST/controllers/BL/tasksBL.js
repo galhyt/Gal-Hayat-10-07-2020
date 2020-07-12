@@ -5,9 +5,11 @@ const {TaskEntity, UserEntity} = entities
 class TasksBL {
     static dbRep = new DbRepository()
     static async createTask(task) {
-        const status = (await this.dbRep.createTask(task) ? 'OK' : 'Error')
+        const insertedId = await this.dbRep.createTask(task)
+        const status = (insertedId ? 'OK' : 'Error')
         return {
             status: status,
+            insertedId: insertedId,
             text: (status == 'OK' ? `Task "${task.title}" was created succesfully!` : `Error creating Task "${task.title}"!`)
         }
     }

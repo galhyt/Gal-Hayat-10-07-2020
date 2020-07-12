@@ -31,7 +31,6 @@ class App extends Component {
   async onOperationClicked(op, _id) {
     switch(op) {
       case "delete":
-        //if (!confirm("האם אתה בטוח שאתה רוצה למחק את המשימה?")) return
         if (await this.delTask(_id)) {
           const indx = this.state.tasks.map((task, indx) => task._id).indexOf(_id)
           delete this.state.tasks[indx]
@@ -84,7 +83,6 @@ class App extends Component {
     var newState = this.state
     newState[id] = value
     this.state = newState
-    //this.setState(newState)
   }
 
   async editTask(task) {
@@ -99,12 +97,35 @@ class App extends Component {
     return result
   }
 
+  async createTask(task) {
+    let result = null
+    await new Promise((resolve, reject) => {
+      fetch(`/tasks/createTask`, {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(task)}).then(res=> {
+        resolve(res.insertedId)
+      })
+    }).then(res => result = res)
+    .catch(() => result = null)
+
+    return result
+  }
+
   async submitTask(task) {
-    if(await this.editTask(task)) {
-      const indx = this.state.tasks.map((t, indx) => t._id).indexOf(task._id)
-      this.state.tasks[indx] = task
-      this.setState(this.state)
+    if (typeof(task._id) != 'undefined') {
+      if(await this.editTask(task)) {
+        const indx = this.state.tasks.map((t, indx) => t._id).indexOf(task._id)
+        this.state.tasks[indx] = task
+      }
     }
+    else {
+      const insertedId = await this.createTask(task)
+      if(insertedId) {
+        task._id = insertedId
+        this.state.tasks.push(task)
+      }
+    }
+
+    this.setState(this.state)
+    useHistory().push('/')
   }
 
   render() {
