@@ -83,13 +83,14 @@ class App extends Component {
   onFieldChange(id, value) {
     var newState = this.state
     newState[id] = value
-    this.setState(newState)
+    this.state = newState
+    //this.setState(newState)
   }
 
   async editTask(task) {
     let result = false
     await new Promise((resolve, reject) => {
-      fetch(`/tasks/editTask`, {method: 'POST', body: JSON.stringify(task)}).then(res=> {
+      fetch(`/tasks/editTask`, {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(task)}).then(res=> {
         resolve()
       })
     }).then(res => result = true)
@@ -98,12 +99,16 @@ class App extends Component {
     return result
   }
 
-  submitTask(task) {
-
+  async submitTask(task) {
+    if(await this.editTask(task)) {
+      const indx = this.state.tasks.map((t, indx) => t._id).indexOf(task._id)
+      this.state.tasks[indx] = task
+      this.setState(this.state)
+    }
   }
 
   render() {
-    const {tasks,_id} = this.state
+    const {tasks} = this.state
     const homeComponent = () => <Home tasks={tasks} onOperationClicked={this.onOperationClicked.bind(this)} />
     return (<Router>
       <div className="App">
@@ -130,7 +135,7 @@ class App extends Component {
               <Route path="/sign-in" component={() => <Login submitLogin={this.submitLogin.bind(this)} onFieldChange={this.onFieldChange.bind(this)} />} />
               <Route path="/sign-up" component={SignUp} />
               <Route path="/home" component={homeComponent} />
-              <Route path="/editTask/:id/:edit" component={(props) => <EditTask {...props} />} />
+              <Route path="/editTask/:id/:edit" component={(props) => <EditTask {...props} submitTask={this.submitTask.bind(this)} />} />
             </Switch>
           </div>
         </div>

@@ -2,11 +2,13 @@ import React, { Component } from 'react'
 import BootstrapTable from 'react-bootstrap/Table'
 
 const EditForm = props => {
-    const {task,edit} = props
+    var {task,edit} = props
 
     function handleChange(e) {
         props.onFieldChange(e.target.id, e.target.value)
     }
+
+    if (!task) return ''
 
     var content = (<><h3>עריכת משימה</h3>
         <div className="form-group">
@@ -40,27 +42,35 @@ const EditForm = props => {
 class EditTask extends Component {
     state = {}
 
+    async componentWillMount() {
+        const {id,edit} = this.props.match.params
+        const task = await this.getTask(id)
+        this.setState({task: task, edit: edit})
+    }
+
     async getTask(_id) {
-        return new Promise((resolve, reject) => {
+        var result
+        await new Promise((resolve, reject) => {
           fetch(`/tasks/getTask?id=${_id}`).then(res=> {
             resolve(res.json())
           })
-        })
+        }).then(res => result = res)
+
+        return result
     }
 
     onFieldChange(id, value) {
-        this.state[id] = value
+        this.state.task[id] = value
+        this.setState(this.state)
     }
 
     onSubmit() {
-        this.props.submitTask(this.state)
+        this.props.submitTask(this.state.task)
     }
     
     render() {
-        const {id,edit} = this.props.match.params
-        this.getTask(id).then(res => this.setState(res))
-
-        return <EditForm task={this.state} edit={Number(edit)} onFieldChange={this.onFieldChange.bind(this)} onSubmit={this.onSubmit.bind(this)} />
+        const {task,edit} = this.state
+        return <EditForm task={task} edit={Number(edit)} onFieldChange={this.onFieldChange.bind(this)} onSubmit={this.onSubmit.bind(this)} />
     }
 }
 
