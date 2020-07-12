@@ -6,6 +6,7 @@ import { BrowserRouter as Router, Switch, Route, Link, useHistory  } from "react
 import Login from "./components/login.component";
 import SignUp from "./components/signup.component";
 import Home from "./components/home.component";
+import EditTask from './components/edittask.component';
 
 class App extends Component {
   state = {}
@@ -35,10 +36,10 @@ class App extends Component {
           const indx = this.state.tasks.map((task, indx) => task._id).indexOf(_id)
           delete this.state.tasks[indx]
         }
+        this.setState(this.state)
         break;
     }
 
-    this.setState(this.state)
   }
 
   async delTask(_id) {
@@ -85,8 +86,24 @@ class App extends Component {
     this.setState(newState)
   }
 
+  async editTask(task) {
+    let result = false
+    await new Promise((resolve, reject) => {
+      fetch(`/tasks/editTask`, {method: 'POST', body: JSON.stringify(task)}).then(res=> {
+        resolve()
+      })
+    }).then(res => result = true)
+    .catch(() => result = false)
+
+    return result
+  }
+
+  submitTask(task) {
+
+  }
+
   render() {
-    const {tasks} = this.state
+    const {tasks,_id} = this.state
     const homeComponent = () => <Home tasks={tasks} onOperationClicked={this.onOperationClicked.bind(this)} />
     return (<Router>
       <div className="App">
@@ -113,6 +130,7 @@ class App extends Component {
               <Route path="/sign-in" component={() => <Login submitLogin={this.submitLogin.bind(this)} onFieldChange={this.onFieldChange.bind(this)} />} />
               <Route path="/sign-up" component={SignUp} />
               <Route path="/home" component={homeComponent} />
+              <Route path="/editTask/:id/:edit" component={(props) => <EditTask {...props} />} />
             </Switch>
           </div>
         </div>

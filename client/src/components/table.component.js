@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import BootstrapTable from 'react-bootstrap/Table'
+import { Link, useHistory  } from "react-router-dom";
 import './Table.css';
 
 const TableHeader = (props) => {
@@ -33,7 +34,11 @@ class TableBody extends Component {
                     <td>{el.clientPhone}</td>
                     <td>{el.clientEmail}</td>
                     <td>{new Date(el.createDate).toDateString()}</td>
-                    <td><a id="delete" _id={el._id} onClick={this.onOperationClicked.bind(this)}>מחיקה</a></td>
+                    <td>
+                        <a id="delete" _id={el._id} onClick={this.onOperationClicked.bind(this)}>מחיקה</a>
+                        <Link className="nav-link" to={`/editTask/${el._id}/1`}>עריכה</Link>
+                        <Link className="nav-link" to={`/editTask/${el._id}/0`}>צפיה</Link>
+                    </td>
                 </tr>
             })
         }
