@@ -1,0 +1,70 @@
+a {
+  cursor: pointer;
+}
+
+.drillDown {
+    cursor: pointer;
+    text-align: center;
+}
+
+.drillDown.drillopen::after {
+    content: "+";
+    width: 100%;
+}
+
+.drillDown.drillclose::after {
+    content: "-";
+    width: 100%;
+}
+
+table {
+    direction: rtl;
+}
+
+table.city {
+    border-style: solid;
+}
+
+table.city > thead tr th,table.city > tbody tr:not(:last-of-type) td {
+    border-bottom-style: solid;
+}
+
+table.city > thead tr th:not(:last-of-type),table.city > tbody tr td:not(:last-of-type) {
+    border-right-style: solid;
+}
+
+/*Tooltip*/
+ 
+  .tooltiptext {
+    visibility: hidden;
+    width: 120px;
+    background-color: #555;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 0;
+    position: relative;
+    z-index: 1;
+    bottom: 125%;
+    left: 40%;
+    margin-left: -60px;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  
+  .tooltiptext::after {
+    content: "";
+    /* position: absolute; */
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #555 transparent transparent transparent;
+  }
+  
+  .tooltiptext.show {
+    visibility: visible;
+    opacity: 1;
+  }
+  
