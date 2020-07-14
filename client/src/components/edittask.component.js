@@ -70,8 +70,8 @@ class EditTask extends Component {
         this.setState(this.state)
     }
 
-    onSubmit() {
-        this.props.submitTask(this.state.task)
+    async onSubmit() {
+        await this.props.submitTask(this.state.task)
     }
     
     render() {

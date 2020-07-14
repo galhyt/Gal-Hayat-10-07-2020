@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
+import { BrowserRouter as Router, Switch, Route, Link  } from "react-router-dom";
+import { createHashHistory } from 'history'
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
-import { BrowserRouter as Router, Switch, Route, Link, useHistory  } from "react-router-dom";
 
 import Login from "./components/login.component";
 import SignUp from "./components/signup.component";
@@ -74,8 +75,8 @@ class App extends Component {
     
     if (result != null) {
       this.token = result.token
-      const history = useHistory()
-      history.push('./home')
+      const history = createHashHistory()
+      this.props.history.push('/')
     }
   }
 
@@ -111,9 +112,14 @@ class App extends Component {
 
   async submitTask(task) {
     if (typeof(task._id) != 'undefined') {
-      if(await this.editTask(task)) {
-        const indx = this.state.tasks.map((t, indx) => t._id).indexOf(task._id)
-        this.state.tasks[indx] = task
+      try {
+        if(await this.editTask(task)) {
+          const indx = this.state.tasks.map((t, indx) => t._id).indexOf(task._id)
+          this.state.tasks[indx] = task
+        }
+      }
+      catch(e) {
+        console.log(e.message)
       }
     }
     else {
@@ -124,9 +130,9 @@ class App extends Component {
       }
     }
 
-    this.setState(this.state)
-    useHistory().push('/')
-  }
+    const history = createHashHistory()
+    history.goBack(-1)
+}
 
   render() {
     const {tasks} = this.state

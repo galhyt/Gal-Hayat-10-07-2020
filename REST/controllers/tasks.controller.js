@@ -23,9 +23,14 @@ function createTask(req, res, next) {
 function editTask(req, res, next) {
     const task = req.body
     // const user = getUserFromToken(getTokenFromHeaders(req))
-    TasksBL.editTask(task)
-        .then(status => res.json(status))
-        .catch(next);
+    try {
+        TasksBL.editTask(task)
+            .then(status => res.json(status))
+            .catch(next);
+    }
+    catch(e) {
+        console.log(e.message)
+    }
 }
 
 function deleteTask(req, res, next) {
